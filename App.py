@@ -8,11 +8,7 @@ initialDetails = companyFirst180DaysTasks.getInitialDetailsFromExcel()
 
 for index, row in initialDetails.iterrows():
     curStockTicker = initialDetails.at[index, 'Company_Ticker']
-    print('cur stock ticker is', curStockTicker)
-    if(index != 0):
-        break
     curStockPriceData = companyFirst180DaysTasks.getStockPriceDataFromFile(curStockTicker)
-
     companyFirst180DaysTasks.displayHistoricalPricesData(row, curStockPriceData['historical'])
 
 

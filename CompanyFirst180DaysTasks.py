@@ -46,12 +46,16 @@ class CompanyFirst180DaysTasks:
 
         plt.plot(dates, openPrices, 'blue', marker='.', label='open price', ls='-')
         plt.plot(dates, closePrices, 'grey', marker='.', label='close price', ls='-')
-        plt.title(stockDataFrameRow['Company_Ticker'] + ' stock movement')
+        plt.title(
+            stockDataFrameRow['Company_Name'] +
+            ' (' + stockDataFrameRow['Company_Ticker'] +
+            ') Stock Movement'
+        ) 
         plt.xlabel('dates')
         plt.ylabel('prices')
         plt.xticks(dateTicks, rotation='vertical')
 
-        plt.grid(axis='x', which='both')
+        plt.grid(axis='both', which='both')
 
         lockupExpirationDatetime = stockDataFrameRow.at['Lockup_Expiration']
         monthBeforeLockupExpiration = self.getMonthBeforeTheLockupDate(lockupExpirationDatetime)
@@ -63,7 +67,17 @@ class CompanyFirst180DaysTasks:
         plt.axvline(x=formattedMonthBeforeLockupExpirationDateAsString, label='month before lockup', color='red')
 
         plt.legend()
-        # plt.savefig(stockDataFrameRow['Company_Ticker'] + '.png', bbox_inches='tight')
+        plt.margins(x=0.01)
+        plt.subplots_adjust(
+            top=0.955,
+            bottom=0.173,
+            right=0.977,
+            left=0.042,
+            wspace=0.2,
+            hspace=0.2,
+        )
+
+
         plt.show()
 
     def getMonthBeforeTheLockupDate(self, lockupExpirationDatetime):
