@@ -1,48 +1,31 @@
-import json
-import matplotlib.pyplot as plt
-import numpy as np
+from HistoricalPrices import HistoricalPrices
+from CompanyFirst180DaysTasks import CompanyFirst180DaysTasks
 
 
-def getDataFromFile(filename):
+companyFirst180DaysTasks = CompanyFirst180DaysTasks()
 
-    with open(filename) as file:
-        data = json.load(file)
+initialDetails = companyFirst180DaysTasks.getInitialDetailsFromExcel()
 
-    return data
+for index, row in initialDetails.iterrows():
+    curStockTicker = initialDetails.at[index, 'Company_Ticker']
+    print('cur stock ticker is', curStockTicker)
+    if(index != 0):
+        break
+    curStockPriceData = companyFirst180DaysTasks.getStockPriceDataFromFile(curStockTicker)
 
-
-def displayHistoricalPricesData(data):
-    dates = []
-    prices = []
-
-    historicalPrices = data['historical']
-    historicalPricesLen = len(historicalPrices) - 1
-    dateTicks = []
-    
-    for i in range(historicalPricesLen, -1, -1):
-        curPrice = historicalPrices[i]
-        if(i % 3 == 0):
-            dateTicks.append(curPrice['date']) 
-        dates.append(curPrice['date'])
-        prices.append(curPrice['open'])
-
-        # index = index + 1
+    companyFirst180DaysTasks.displayHistoricalPricesData(row, curStockPriceData['historical'])
 
 
-    plt.plot(dates, prices, color='red', marker='o')
-    plt.title(data['symbol'] + ' stock movement')
-    plt.xlabel('dates')
-    plt.ylabel('prices')
-    plt.xticks(dateTicks, rotation='vertical')
-    plt.axvline(x='2020-12-09', label='lockup exp', color='black')
-    plt.legend()
-    plt.show()
+# historicalPricesObj = HistoricalPrices()
 
+# # data = getDataFromFile("historicalPrices/historicalPriceAZEK.txt")
+# data = historicalPricesObj.getHistoricalDataFromAllFiles()
+# data[0]['lockupExp'] = '2020-12-02'
+# data[1]['lockupExp'] = '2020-12-09'
 
-
-
-data = getDataFromFile("historicalPrices/historicalPriceAZEK.txt")
-displayHistoricalPricesData(data)
-data = getDataFromFile("historicalPrices/historicalPriceFOUR.txt")
-displayHistoricalPricesData(data)
+# for curStock in data:
+#     historicalPricesObj.displayHistoricalPricesData(curStock)
+# # displayHistoricalPricesData(data)
+# # data = getDataFromFile("historicalPrices/historicalPriceFOUR.txt")
+# # displayHistoricalPricesData(data)
 
