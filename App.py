@@ -1,16 +1,28 @@
 from HistoricalPrices import HistoricalPrices
 from CompanyFirst180DaysTasks import CompanyFirst180DaysTasks
+from machineLearning.LockoutExpirationDataRelationships import LockoutExpirationDataRelationships
+import datetime
+
+
+def displayHistoricalPricesData(initialIPODetails):
+
+    for index, row in initialIPODetails.iterrows():
+        curStockTicker = initialIPODetails.at[index, 'CompanyTicker']
+        curStockPriceData = companyFirst180DaysTasks.getStockPriceDataFromFile(curStockTicker)
+        companyFirst180DaysTasks.displayHistoricalPricesData(row, curStockPriceData['historical'])
+
+        
 
 
 companyFirst180DaysTasks = CompanyFirst180DaysTasks()
+initialIPODetails = companyFirst180DaysTasks.getInitialDetailsFromExcel()
+# companyLockupDataFrame = doMachineLearningTask(initialIPODetails)
 
-initialDetails = companyFirst180DaysTasks.getInitialDetailsFromExcel()
+lockoutExpirationDataRelationships = LockoutExpirationDataRelationships()
+lockoutExpirationDataRelationships.doMachineLearningTask(initialIPODetails)
+# print(companyLockupDataFrame.corr())
 
-for index, row in initialDetails.iterrows():
-    curStockTicker = initialDetails.at[index, 'Company_Ticker']
-    curStockPriceData = companyFirst180DaysTasks.getStockPriceDataFromFile(curStockTicker)
-    companyFirst180DaysTasks.displayHistoricalPricesData(row, curStockPriceData['historical'])
-
+# print(initialIPODetails.iloc[[0]])
 
 # historicalPricesObj = HistoricalPrices()
 
