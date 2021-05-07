@@ -1,48 +1,39 @@
-import json
-import matplotlib.pyplot as plt
-import numpy as np
+from HistoricalPrices import HistoricalPrices
+from CompanyFirst180DaysTasks import CompanyFirst180DaysTasks
+from machineLearning.LockoutExpirationDataRelationships import LockoutExpirationDataRelationships
+import datetime
 
 
-def getDataFromFile(filename):
+def displayHistoricalPricesData(initialIPODetails):
 
-    with open(filename) as file:
-        data = json.load(file)
+    for index, row in initialIPODetails.iterrows():
+        curStockTicker = initialIPODetails.at[index, 'CompanyTicker']
+        curStockPriceData = companyFirst180DaysTasks.getStockPriceDataFromFile(curStockTicker)
+        companyFirst180DaysTasks.displayHistoricalPricesData(row, curStockPriceData['historical'])
 
-    return data
-
-
-def displayHistoricalPricesData(data):
-    dates = []
-    prices = []
-
-    historicalPrices = data['historical']
-    historicalPricesLen = len(historicalPrices) - 1
-    dateTicks = []
-    
-    for i in range(historicalPricesLen, -1, -1):
-        curPrice = historicalPrices[i]
-        if(i % 3 == 0):
-            dateTicks.append(curPrice['date']) 
-        dates.append(curPrice['date'])
-        prices.append(curPrice['open'])
-
-        # index = index + 1
+        
 
 
-    plt.plot(dates, prices, color='red', marker='o')
-    plt.title(data['symbol'] + ' stock movement')
-    plt.xlabel('dates')
-    plt.ylabel('prices')
-    plt.xticks(dateTicks, rotation='vertical')
-    plt.axvline(x='2020-12-09', label='lockup exp', color='black')
-    plt.legend()
-    plt.show()
+companyFirst180DaysTasks = CompanyFirst180DaysTasks()
+initialIPODetails = companyFirst180DaysTasks.getInitialDetailsFromExcel()
+# companyLockupDataFrame = doMachineLearningTask(initialIPODetails)
 
+lockoutExpirationDataRelationships = LockoutExpirationDataRelationships()
+lockoutExpirationDataRelationships.doMachineLearningTask(initialIPODetails)
+# print(companyLockupDataFrame.corr())
 
+# print(initialIPODetails.iloc[[0]])
 
+# historicalPricesObj = HistoricalPrices()
 
-data = getDataFromFile("historicalPrices/historicalPriceAZEK.txt")
-displayHistoricalPricesData(data)
-data = getDataFromFile("historicalPrices/historicalPriceFOUR.txt")
-displayHistoricalPricesData(data)
+# # data = getDataFromFile("historicalPrices/historicalPriceAZEK.txt")
+# data = historicalPricesObj.getHistoricalDataFromAllFiles()
+# data[0]['lockupExp'] = '2020-12-02'
+# data[1]['lockupExp'] = '2020-12-09'
+
+# for curStock in data:
+#     historicalPricesObj.displayHistoricalPricesData(curStock)
+# # displayHistoricalPricesData(data)
+# # data = getDataFromFile("historicalPrices/historicalPriceFOUR.txt")
+# # displayHistoricalPricesData(data)
 
